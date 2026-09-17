@@ -9,6 +9,20 @@ import yaml
 from .benchmark import run_visual_motor_benchmark, write_benchmark_results
 from .data import build_layered_connectome
 from .experiment import run_experiment, write_results
+from .malecns import select_visual_descending_circuit, write_circuit_selection
+
+
+def _select_malecns(args: argparse.Namespace) -> None:
+    assignments, report = select_visual_descending_circuit(
+        args.annotations,
+        args.neurotransmitters,
+        args.weights,
+        layer_sizes=tuple(args.layer_sizes),
+        min_weight=args.min_weight,
+        nt_confidence=args.nt_confidence,
+    )
+    write_circuit_selection(assignments, report, args.output, args.report)
+    print(json.dumps(report, indent=2, ensure_ascii=False))
 
 
 def _prepare(args: argparse.Namespace) -> None:
@@ -68,6 +82,21 @@ def parser() -> argparse.ArgumentParser:
     prepare.add_argument("--report", default="results/projection-report.json")
     prepare.add_argument("--min-weight", type=float, default=5.0)
     prepare.set_defaults(func=_prepare)
+
+    select_malecns = subcommands.add_parser(
+        "select-malecns", help="derive a visual-to-descending circuit from MaleCNS v1.0"
+    )
+    select_malecns.add_argument("--annotations", required=True)
+    select_malecns.add_argument("--neurotransmitters", required=True)
+    select_malecns.add_argument("--weights", required=True)
+    select_malecns.add_argument("--output", required=True, help="output assignments CSV")
+    select_malecns.add_argument("--report", required=True, help="output selection JSON")
+    select_malecns.add_argument(
+        "--layer-sizes", nargs=4, type=int, default=[32, 48, 40, 24]
+    )
+    select_malecns.add_argument("--min-weight", type=float, default=5.0)
+    select_malecns.add_argument("--nt-confidence", type=float, default=0.5)
+    select_malecns.set_defaults(func=_select_malecns)
 
     train = subcommands.add_parser("train", help="run a configured experiment")
     train.add_argument("--config", required=True)

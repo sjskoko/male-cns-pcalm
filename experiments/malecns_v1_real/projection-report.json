@@ -1,0 +1,15 @@
+{
+  "input_edges_after_threshold": 7622864,
+  "edges_with_both_nodes_assigned": 2663,
+  "retained_adjacent_forward_edges": 1001,
+  "dropped_intra_layer_edges": 1059,
+  "dropped_feedback_edges": 392,
+  "dropped_skip_forward_edges": 211,
+  "layer_names": [
+    "visual_projection",
+    "central_brain_1",
+    "central_brain_2",
+    "descending_neuron"
+  ],
+  "min_weight": 5.0
+}

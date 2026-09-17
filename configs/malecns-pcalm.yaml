@@ -1,7 +1,7 @@
 seed: 0
 device: auto
 method: pcalm
-connectome: data/processed/malecns-visual-motor.pt
+connectome: data/processed/malecns-v1-visual-descending.pt
 output_dim: 4
 samples: 1024
 batch_size: 16

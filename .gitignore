@@ -8,6 +8,8 @@ dist/
 build/
 data/
 results/
+!experiments/malecns_v1_real/results/
+!experiments/malecns_v1_real/results/**
 *.pt
 *.pth
 *.ckpt

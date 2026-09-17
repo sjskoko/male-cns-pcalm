@@ -1,0 +1,90 @@
+{
+  "selection_version": 2,
+  "source": "MaleCNS v1.0 minconf 0.5",
+  "source_files": {
+    "body-annotations-male-cns-v1.0-minconf-0.5.feather": "2177e246113e4cfbf1e7772ec37c6da1955ff22e8063d0b1f833101f99a9a3b2",
+    "body-neurotransmitters-male-cns-v1.0.feather": "95c9289220663abeb3409f3ad9e5a7f8a53f8093f5139d15502cd08da8879621",
+    "connectome-weights-male-cns-v1.0-minconf-0.5.feather": "e35da783d1c686b2b58b3b87cd6a403ae43bfcfba8bff28e08ef752c1a56afc1"
+  },
+  "rules": {
+    "superclass_path": [
+      "visual_projection",
+      "cb_intrinsic",
+      "cb_intrinsic",
+      "descending_neuron"
+    ],
+    "module_names": [
+      "visual_projection",
+      "central_brain_1",
+      "central_brain_2",
+      "descending_neuron"
+    ],
+    "minimum_connection_weight": 5.0,
+    "middle_path_score": "log1p(input_support)*log1p(edge_weight)*log1p(output_support)",
+    "input_balance": "top visual-projection neurons by support, 50% somaSide L/R",
+    "input_position_proxy": {
+      "L": -0.58,
+      "R": 0.58
+    },
+    "known_signs": {
+      "acetylcholine": 1,
+      "gaba": -1,
+      "histamine": -1
+    },
+    "unknown_or_ambiguous_sign": 0,
+    "nt_confidence_threshold": 0.5
+  },
+  "candidate_neurons": {
+    "visual_projection": 9201,
+    "cb_intrinsic": 32164,
+    "descending_neuron": 1314
+  },
+  "candidate_edges": {
+    "all_edges_at_or_above_threshold": 7622864,
+    "visual_to_central": 188498,
+    "central_to_central": 494596,
+    "central_to_descending": 99211
+  },
+  "requested_layer_sizes": [
+    32,
+    48,
+    40,
+    24
+  ],
+  "selected_layer_sizes": [
+    32,
+    40,
+    36,
+    24
+  ],
+  "selected_edges": [
+    {
+      "projection": "visual_projection->central_brain_1",
+      "edges": 208,
+      "density": 0.1625,
+      "weight_sum": 18074
+    },
+    {
+      "projection": "central_brain_1->central_brain_2",
+      "edges": 620,
+      "density": 0.4305555555555556,
+      "weight_sum": 25897
+    },
+    {
+      "projection": "central_brain_2->descending_neuron",
+      "edges": 173,
+      "density": 0.20023148148148148,
+      "weight_sum": 16708
+    }
+  ],
+  "input_side_counts": {
+    "R": 16,
+    "L": 16
+  },
+  "sign_counts": {
+    "-1": 23,
+    "0": 22,
+    "1": 87
+  },
+  "scope": "Real MaleCNS topology; synthetic static visual-action labels; no behavior claim."
+}

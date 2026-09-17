@@ -60,6 +60,84 @@ def _normalize_weights(raw: torch.Tensor, targets: torch.Tensor, target_count: i
     return transformed / denominator[targets]
 
 
+def read_connectome_edges(
+    path: str | Path,
+    *,
+    source_ids: Iterable[int] | None = None,
+    target_ids: Iterable[int] | None = None,
+    min_weight: float = 1.0,
+) -> tuple[pd.DataFrame, int]:
+    """Read thresholded edges, streaming Feather files when IDs are supplied.
+
+    The official MaleCNS v1.0 weight table has more than 150 million rows. A
+    full pandas materialization is unnecessary when constructing a small
+    circuit, so Feather/Arrow inputs are filtered one record batch at a time.
+    The returned integer is the number of edges in the complete source table
+    that passed ``min_weight``; it is useful for an auditable projection report.
+    """
+
+    path = Path(path)
+    available = _columns(path)
+    source_col = _resolve(available, SOURCE_ALIASES, "presynaptic/source ID")
+    target_col = _resolve(available, TARGET_ALIASES, "postsynaptic/target ID")
+    weight_col = _resolve(available, WEIGHT_ALIASES, "connection weight")
+    selected_columns = [source_col, target_col, weight_col]
+    source_values = None if source_ids is None else list(source_ids)
+    target_values = None if target_ids is None else list(target_ids)
+
+    if path.suffix.lower() in {".feather", ".arrow"} and (
+        source_values is not None or target_values is not None
+    ):
+        import pyarrow as pa
+        import pyarrow.compute as pc
+        from pyarrow import ipc
+
+        source_set = (
+            None if source_values is None else pa.array(source_values, type=pa.int64())
+        )
+        target_set = (
+            None if target_values is None else pa.array(target_values, type=pa.int64())
+        )
+        batches = []
+        threshold_count = 0
+        with pa.memory_map(str(path), "r") as mapped:
+            reader = ipc.open_file(mapped)
+            indices = {name: reader.schema.get_field_index(name) for name in selected_columns}
+            for index in range(reader.num_record_batches):
+                batch = reader.get_batch(index)
+                sources = batch.column(indices[source_col])
+                targets = batch.column(indices[target_col])
+                weights = batch.column(indices[weight_col])
+                mask = pc.greater_equal(weights, pa.scalar(min_weight, type=weights.type))
+                threshold_count += int(pc.sum(pc.cast(mask, pa.int64())).as_py() or 0)
+                if source_set is not None:
+                    mask = pc.and_(mask, pc.is_in(sources, value_set=source_set))
+                if target_set is not None:
+                    mask = pc.and_(mask, pc.is_in(targets, value_set=target_set))
+                if pc.any(mask).as_py():
+                    batches.append(batch.select(selected_columns).filter(mask))
+        if batches:
+            frame = pa.Table.from_batches(batches).to_pandas()
+        else:
+            frame = pd.DataFrame(columns=selected_columns)
+    else:
+        frame = _read_frame(path, selected_columns)
+        threshold_mask = frame[weight_col] >= min_weight
+        threshold_count = int(threshold_mask.sum())
+        frame = frame[threshold_mask]
+        if source_values is not None:
+            frame = frame[frame[source_col].isin(source_values)]
+        if target_values is not None:
+            frame = frame[frame[target_col].isin(target_values)]
+
+    return (
+        frame.rename(
+            columns={source_col: "source", target_col: "target", weight_col: "weight"}
+        ).reset_index(drop=True),
+        threshold_count,
+    )
+
+
 def build_layered_connectome(
     edges_path: str | Path,
     assignments_path: str | Path,
@@ -95,14 +173,13 @@ def build_layered_connectome(
     if not assignments["sign"].isin([-1, 0, 1]).all():
         raise ValueError("assignment sign must be -1, 0, or 1")
 
-    edge_columns = _columns(edges_path)
-    source_col = _resolve(edge_columns, SOURCE_ALIASES, "presynaptic/source ID")
-    target_col = _resolve(edge_columns, TARGET_ALIASES, "postsynaptic/target ID")
-    weight_col = _resolve(edge_columns, WEIGHT_ALIASES, "connection weight")
-    edges = _read_frame(edges_path, [source_col, target_col, weight_col]).rename(
-        columns={source_col: "source", target_col: "target", weight_col: "weight"}
+    assigned_ids = assignments["body_id"].astype(np.int64).tolist()
+    edges, threshold_count = read_connectome_edges(
+        edges_path,
+        source_ids=assigned_ids,
+        target_ids=assigned_ids,
+        min_weight=min_weight,
     )
-    edges = edges[edges["weight"] >= min_weight]
 
     source_info = assignments[["body_id", "layer", "sign"]].rename(
         columns={"body_id": "source", "layer": "source_layer", "sign": "source_sign"}
@@ -115,7 +192,7 @@ def build_layered_connectome(
     )
     delta = merged["target_layer"] - merged["source_layer"]
     report: dict[str, int | float | list[str]] = {
-        "input_edges_after_threshold": len(edges),
+        "input_edges_after_threshold": threshold_count,
         "edges_with_both_nodes_assigned": len(merged),
         "retained_adjacent_forward_edges": int((delta == 1).sum()),
         "dropped_intra_layer_edges": int((delta == 0).sum()),

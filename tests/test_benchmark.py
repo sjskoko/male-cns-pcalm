@@ -28,6 +28,14 @@ def test_full_virtual_matrix_writes_expected_artifacts(tmp_path):
     assert all("test_accuracy_auc" in trial for trial in result["trials"])
     output = tmp_path / "benchmark"
     write_benchmark_results(result, output)
-    for filename in ("result.json", "report.md", "trials.csv", "metrics.csv", "aggregate.csv"):
+    for filename in (
+        "result.json",
+        "report.md",
+        "trials.csv",
+        "metrics.csv",
+        "aggregate.csv",
+        "paired_effects.csv",
+    ):
         assert (output / filename).is_file()
+    assert len(result["paired_effects"]) == 6
     assert "not a MaleCNS result" in (output / "report.md").read_text(encoding="utf-8")

@@ -18,6 +18,7 @@ MaleCNS의 실제 연결 토폴로지를 고정된 희소 마스크로 사용하
 | 차수 보존 재배선 대조군 | 구현 | 각 이분 레이어의 in/out degree를 유지하는 double-edge swap |
 | 시각–운동 3×3 벤치마크 | 구현 | 같은 과제에서 토폴로지 3종×학습법 3종 비교 |
 | BP gradient 정렬 지표 | 구현 | readout을 제외한 희소 투영의 gradient cosine 측정 |
+| 공식 MaleCNS v1.0 반복실험 | 완료 | 실제 연결·주석·NT로 132개 뉴런 회로를 선별해 10 seeds × 9조건 실행 |
 | 실제 MaleCNS 전체 166k 규모 학습 | 미검증 | 먼저 1k–5k visual-to-motor 부분 그래프에서 검증해야 함 |
 | 시간축/RL credit assignment | 미구현 | 현재 목적함수는 정적 지도학습·모방학습용 MSE |
 
@@ -114,7 +115,17 @@ uv run flypcalm benchmark \
 
 원본 대용량 파일은 저장소에 커밋하지 않는다. `data/`는 `.gitignore`에 포함돼 있다.
 
-### 1. 명시적 레이어 배정표 만들기
+다운로드부터 체크섬 검증, 회로 선별, 그래프 투영, 10-seed 벤치마크까지 한 번에 재현하려면 다음을 실행한다.
+
+```bash
+bash scripts/run_malecns_v1_real.sh
+```
+
+실제로 실행한 설정·파생 배정표·전체 결과와 해석은 [`experiments/malecns_v1_real/`](experiments/malecns_v1_real/)에 고정했다. 이 첫 실험에서는 native MaleCNS topology가 재배선 대조군보다 낫다는 증거가 나오지 않았다.
+
+### 1. 레이어 배정표 만들기
+
+재현 실험은 `flypcalm select-malecns` 명령으로 공식 주석에서 배정표를 자동 생성한다. exact superclass와 실제 3-edge 연결 경로만 이용하며, 선별 규칙은 `selection-report.json`에 기록한다. 수동으로 다른 가설을 시험하려면 아래 스키마를 따른다.
 
 `assignments.csv`는 다음 열을 가져야 한다.
 
@@ -141,10 +152,10 @@ uv run flypcalm benchmark \
 ```bash
 uv run flypcalm prepare \
   --edges data/raw/connectome-weights-male-cns-v1.0-minconf-0.5.feather \
-  --assignments data/assignments/visual-motor.csv \
+  --assignments experiments/malecns_v1_real/assignments.csv \
   --min-weight 5 \
-  --output data/processed/malecns-visual-motor.pt \
-  --report results/projection-report.json
+  --output data/processed/malecns-v1-visual-descending.pt \
+  --report experiments/malecns_v1_real/projection-report.json
 ```
 
 입력 열 이름은 공식 MaleCNS 형식인 `body_pre`, `body_post`, `weight`를 우선 인식하며 흔한 별칭도 지원한다. 연결 강도는 `log1p(weight)` 후 postsynaptic neuron별 L2 정규화로 초기화한다. 알려진 sign은 presynaptic neuron에 적용된다.
@@ -201,7 +212,8 @@ wait
 ```text
 src/flypcalm/
   connectome.py   직렬화 가능한 희소 레이어 그래프
-  data.py         MaleCNS 연결표 투영과 손실 연결 보고서
+  data.py         대용량 MaleCNS 연결표의 스트리밍 필터·투영·손실 보고서
+  malecns.py      실제 visual→central-brain→descending 회로 자동 선별
   model.py        고정 마스크·부호 제약 희소 신경망
   pcalm.py        PC/PC-ALM inference와 국소 parameter update
   synthetic.py    synthetic graph와 차수 보존 재배선
@@ -209,7 +221,7 @@ src/flypcalm/
   benchmark.py    topology×learning-rule 실험 러너와 결과 집계
   tasks/          토폴로지와 독립적인 시각–운동 과제
   metrics/        BP 대비 local-gradient 정렬 지표
-  cli.py          prepare/train/smoke/benchmark 명령
+  cli.py          select-malecns/prepare/train/smoke/benchmark 명령
 configs/benchmarks/ 가상 및 MaleCNS 3×3 실험 설정
 docs/             실험 프로토콜과 해석 기준
 tests/            수식·부호·전처리·재배선·벤치마크 테스트

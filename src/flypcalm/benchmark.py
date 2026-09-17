@@ -221,6 +221,56 @@ def _aggregate(trials: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return rows
 
 
+def _paired_effects(trials: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Compute paired native-minus-control effects using matching random seeds."""
+
+    rows: list[dict[str, Any]] = []
+    for method in METHODS:
+        method_rows = [row for row in trials if row["method"] == method]
+        by_condition = {
+            (str(row["topology"]), int(row["seed"])): row for row in method_rows
+        }
+        for control in ("degree_preserving", "random"):
+            seeds = sorted(
+                seed
+                for topology, seed in by_condition
+                if topology == "native" and (control, seed) in by_condition
+            )
+            if not seeds:
+                continue
+            accuracy_deltas = [
+                float(by_condition[("native", seed)]["final_test_accuracy"])
+                - float(by_condition[(control, seed)]["final_test_accuracy"])
+                for seed in seeds
+            ]
+            auc_deltas = [
+                float(by_condition[("native", seed)]["test_accuracy_auc"])
+                - float(by_condition[(control, seed)]["test_accuracy_auc"])
+                for seed in seeds
+            ]
+            cosine_deltas = [
+                float(by_condition[("native", seed)]["gradient_cosine_after"])
+                - float(by_condition[(control, seed)]["gradient_cosine_after"])
+                for seed in seeds
+            ]
+            rows.append(
+                {
+                    "method": method,
+                    "control": control,
+                    "paired_runs": len(seeds),
+                    "accuracy_delta_mean": statistics.fmean(accuracy_deltas),
+                    "accuracy_delta_std": (
+                        statistics.stdev(accuracy_deltas) if len(seeds) > 1 else 0.0
+                    ),
+                    "accuracy_native_win_rate": sum(delta > 0 for delta in accuracy_deltas)
+                    / len(seeds),
+                    "accuracy_auc_delta_mean": statistics.fmean(auc_deltas),
+                    "gradient_cosine_delta_mean": statistics.fmean(cosine_deltas),
+                }
+            )
+    return rows
+
+
 def run_visual_motor_benchmark(config: dict[str, Any]) -> dict[str, Any]:
     device = _device(str(config.get("device", "auto")))
     base = _base_connectome(config)
@@ -290,6 +340,7 @@ def run_visual_motor_benchmark(config: dict[str, Any]) -> dict[str, Any]:
         "metrics": metrics,
         "diagnostics": details,
         "aggregate": _aggregate(trials),
+        "paired_effects": _paired_effects(trials),
     }
 
 
@@ -297,7 +348,9 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     if not rows:
         return
     with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0].keys()))
+        writer = csv.DictWriter(
+            handle, fieldnames=list(rows[0].keys()), lineterminator="\n"
+        )
         writer.writeheader()
         writer.writerows(rows)
 
@@ -339,6 +392,26 @@ def _report(result: dict[str, Any]) -> str:
             "| {accuracy_auc_mean:.3f} | {gradient_cosine_after_mean:.3f} "
             "| {runtime_seconds_mean:.2f} |".format(**row)
         )
+    if result.get("paired_effects"):
+        lines.extend(
+            [
+                "",
+                "## Paired native-minus-control effects",
+                "",
+                "Positive values favor the native topology. Runs are paired by seed.",
+                "",
+                "| Method | Control | Runs | Accuracy delta | Native win rate | AUC delta | Gradient-cosine delta |",
+                "|---|---|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for row in result["paired_effects"]:
+            lines.append(
+                "| {method} | {control} | {paired_runs} | {accuracy_delta_mean:+.3f} ± "
+                "{accuracy_delta_std:.3f} | {accuracy_native_win_rate:.2f} | "
+                "{accuracy_auc_delta_mean:+.3f} | {gradient_cosine_delta_mean:+.3f} |".format(
+                    **row
+                )
+            )
     lines.extend(
         [
             "",
@@ -360,3 +433,4 @@ def write_benchmark_results(result: dict[str, Any], output_dir: str | Path) -> N
     _write_csv(output / "trials.csv", result["trials"])
     _write_csv(output / "metrics.csv", result["metrics"])
     _write_csv(output / "aggregate.csv", result["aggregate"])
+    _write_csv(output / "paired_effects.csv", result.get("paired_effects", []))

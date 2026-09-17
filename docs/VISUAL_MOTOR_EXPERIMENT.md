@@ -12,7 +12,7 @@
 |---|---|
 | 토폴로지 | `native`, `degree_preserving`, `random` |
 | 학습법 | `bp`, `pc`, `pcalm` |
-| 기본 반복 | seed 5개 |
+| 기본 반복 | 실제 실험 seed 10개; 가상 점검 seed 1–5개 |
 
 `degree_preserving`은 각 뉴런의 in/out degree를 유지한 채 edge endpoint를 교환한다. `random`은 레이어 크기와 총 edge 수만 유지한다. PC와 PC-ALM에서는 settled state를 detach한 뒤 각 투영의 로컬 제약항을 따로 미분한다.
 
@@ -64,9 +64,22 @@ uv run flypcalm benchmark \
 
 ## 실제 MaleCNS 실험으로 전환
 
+공식 v1.0 자료에서 회로를 자동 선별하고 10-seed 실험까지 실행한 기록은 [`experiments/malecns_v1_real/`](../experiments/malecns_v1_real/)에 있다. 현재 결과에서는 native topology의 이점을 관찰하지 못했다.
+
 ### 1. 뉴런 배정표
 
-`assignments.csv`에 `body_id`, `layer`, `module`, `sign`을 넣는다. 시각 입력층 뉴런에는 선택 열 `input_position`도 넣는다. 값은 왼쪽 시야 `-1`, 정면 `0`, 오른쪽 시야 `+1` 범위로 정규화한다. 이 열을 사용하면 가상 과제의 좌우 자극이 실제로 지정한 입력 뉴런에 매핑된다.
+수동 배정표 대신 공식 주석과 실제 3-edge 경로를 이용하는 재현 가능한 선별 명령을 제공한다.
+
+```bash
+uv run flypcalm select-malecns \
+  --annotations data/raw/malecns-v1.0/body-annotations-male-cns-v1.0-minconf-0.5.feather \
+  --neurotransmitters data/raw/malecns-v1.0/body-neurotransmitters-male-cns-v1.0.feather \
+  --weights data/raw/malecns-v1.0/connectome-weights-male-cns-v1.0-minconf-0.5.feather \
+  --output experiments/malecns_v1_real/assignments.csv \
+  --report experiments/malecns_v1_real/selection-report.json
+```
+
+생성되는 `assignments.csv`에는 `body_id`, `layer`, `module`, `sign`, `input_position`과 감사용 type/side/NT 열이 들어간다. 현재 `input_position`은 soma side를 `-0.58/+0.58`로 옮긴 proxy이며 실제 시야 좌표가 아니다.
 
 `input_position`이 없으면 코드가 뉴런 ID 정렬 순서를 이용한 proxy 위치를 사용하고 결과에 `input_layout=index_proxy`를 기록한다. 이는 최종 연구 결과에 사용하면 안 된다.
 
@@ -75,20 +88,20 @@ uv run flypcalm benchmark \
 ```bash
 uv run flypcalm prepare \
   --edges data/raw/connectome-weights-male-cns-v1.0-minconf-0.5.feather \
-  --assignments data/assignments/visual-motor.csv \
+  --assignments experiments/malecns_v1_real/assignments.csv \
   --min-weight 5 \
-  --output data/processed/malecns-visual-motor.pt \
-  --report results/projection-report.json
+  --output data/processed/malecns-v1-visual-descending.pt \
+  --report experiments/malecns_v1_real/projection-report.json
 ```
 
 `projection-report.json`에서 피드백·건너뛰기·레이어 내부 연결의 손실 비율을 먼저 확인한다. 보존된 edge가 지나치게 적으면 레이어 배정부터 수정한다.
 
-### 3. 5-seed 벤치마크
+### 3. 10-seed 벤치마크
 
 ```bash
 uv run flypcalm benchmark \
   --config configs/benchmarks/malecns_visual_motor.yaml \
-  --output-dir results/malecns-visual-motor
+  --output-dir experiments/malecns_v1_real/results
 ```
 
 실제 MaleCNS 결과에서 가장 먼저 볼 비교는 `native+pcalm`과 `degree_preserving+pcalm`이다. 단순 `native` 대 `random` 차이만으로 실제 배선의 장점을 주장하면 안 된다.
