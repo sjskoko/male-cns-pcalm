@@ -84,6 +84,95 @@ def random_layered_connectome(
     return graph
 
 
+def visual_proxy_connectome(
+    layer_sizes: list[int] | tuple[int, ...],
+    *,
+    density: float = 0.25,
+    inhibitory_fraction: float = 0.2,
+    receptive_width: float = 0.32,
+    seed: int = 0,
+) -> LayeredConnectome:
+    """Create a retinotopic sparse graph for virtual visual-motor experiments.
+
+    It is intentionally a synthetic proxy, not a reconstruction of MaleCNS.
+    Nearby visual-field positions connect more often than distant positions so
+    rewiring controls destroy a known structural prior.
+    """
+    if len(layer_sizes) < 2 or any(width < 1 for width in layer_sizes):
+        raise ValueError("layer_sizes must contain at least two positive widths")
+    if not 0 < density <= 1:
+        raise ValueError("density must be in (0, 1]")
+    if receptive_width <= 0:
+        raise ValueError("receptive_width must be positive")
+
+    generator = torch.Generator().manual_seed(seed)
+    positions = [torch.linspace(-1.0, 1.0, width) for width in layer_sizes]
+    layers: list[LayerSpec] = []
+    node_offset = 0
+    source_ids = torch.arange(layer_sizes[0], dtype=torch.long)
+    node_offset += layer_sizes[0]
+
+    for layer_index, (source_width, target_width) in enumerate(pairwise(layer_sizes)):
+        source_positions = positions[layer_index]
+        target_positions = positions[layer_index + 1]
+        fan_in = min(source_width, max(1, round(density * source_width)))
+        pairs: list[tuple[int, int]] = []
+        for target, target_position in enumerate(target_positions):
+            distance = source_positions - target_position
+            probability = torch.exp(-0.5 * (distance / receptive_width) ** 2) + 1e-3
+            selected = torch.multinomial(
+                probability, fan_in, replacement=False, generator=generator
+            )
+            pairs.extend((target, int(source)) for source in selected)
+
+        covered_sources = {source for _, source in pairs}
+        for source in range(source_width):
+            if source not in covered_sources:
+                nearest_target = int(
+                    torch.argmin((target_positions - source_positions[source]).abs())
+                )
+                pairs.append((nearest_target, source))
+
+        edge_index = torch.tensor(pairs, dtype=torch.long).transpose(0, 1).contiguous()
+        edge_count = edge_index.shape[1]
+        source_sign = torch.where(
+            torch.rand(source_width, generator=generator) < inhibitory_fraction,
+            -torch.ones(source_width),
+            torch.ones(source_width),
+        )
+        sign = source_sign[edge_index[1]].to(torch.int8)
+        magnitudes = 0.25 + 0.25 * torch.rand(edge_count, generator=generator)
+        values = sign.to(torch.float32) * magnitudes / fan_in**0.5
+        target_ids = torch.arange(node_offset, node_offset + target_width, dtype=torch.long)
+        layers.append(
+            LayerSpec(
+                source_ids=source_ids,
+                target_ids=target_ids,
+                edge_index=edge_index,
+                initial_values=values,
+                sign=sign,
+                source_name=f"visual_proxy_{layer_index}",
+                target_name=f"visual_proxy_{layer_index + 1}",
+            )
+        )
+        source_ids = target_ids
+        node_offset += target_width
+
+    graph = LayeredConnectome(
+        tuple(layers),
+        {
+            "kind": "retinotopic_visual_proxy",
+            "seed": seed,
+            "density": density,
+            "receptive_width": receptive_width,
+            "input_positions": positions[0].tolist(),
+            "biological_claim": False,
+        },
+    )
+    graph.validate()
+    return graph
+
+
 def degree_preserving_rewire(
     connectome: LayeredConnectome,
     *,

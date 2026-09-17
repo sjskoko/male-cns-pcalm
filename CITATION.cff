@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this prototype, cite it together with the PC-ALM and MaleCNS sources listed in README.md."
 title: "MaleCNS × PC-ALM"
 type: software
-version: 0.1.0
+version: 0.2.0
 date-released: 2026-09-17
 license: MIT
 authors:

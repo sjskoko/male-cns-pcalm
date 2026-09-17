@@ -23,6 +23,7 @@ def test_prepare_projects_only_adjacent_forward_edges(tmp_path):
             "layer": [0, 0, 1, 1, 2],
             "module": ["input", "input", "middle", "middle", "output"],
             "sign": [1, 1, -1, 1, 0],
+            "input_position": [-1.0, 1.0, None, None, None],
         }
     )
     edges_path = tmp_path / "edges.feather"
@@ -38,6 +39,7 @@ def test_prepare_projects_only_adjacent_forward_edges(tmp_path):
     graph.save(output)
     restored = LayeredConnectome.load(output)
     assert restored.layer_sizes == (2, 2, 1)
+    assert restored.metadata["input_positions"] == [-1.0, 1.0]
 
 
 def test_degree_preserving_rewire_preserves_bipartite_degrees():

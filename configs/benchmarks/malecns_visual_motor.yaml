@@ -1,0 +1,22 @@
+device: auto
+connectome: data/processed/malecns-visual-motor.pt
+
+topologies: [native, degree_preserving, random]
+methods: [bp, pc, pcalm]
+seeds: [0, 1, 2, 3, 4]
+
+train_samples: 4096
+test_samples: 1024
+noise_std: 0.04
+batch_size: 32
+epochs: 30
+activation: tanh
+trainable_edges: true
+learning_rate: 0.001
+
+budget: 10
+inner_steps: 1
+state_lr: 0.02
+rho: 1.0
+alpha: 0.25
+weight_credit_timing: pre_dual

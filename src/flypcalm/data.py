@@ -80,6 +80,8 @@ def build_layered_connectome(
     required = [node_col, "layer", "module"]
     if "sign" in assignment_columns:
         required.append("sign")
+    if "input_position" in assignment_columns:
+        required.append("input_position")
     assignments = _read_frame(assignments_path, required).rename(columns={node_col: "body_id"})
     if assignments["body_id"].duplicated().any():
         raise ValueError("assignments contain duplicate body IDs")
@@ -164,14 +166,24 @@ def build_layered_connectome(
         report["layer_names"].append(source_name)  # type: ignore[union-attr]
     report["layer_names"].append(layers[-1].target_name)  # type: ignore[union-attr]
 
+    metadata: dict[str, object] = {
+        "kind": "MaleCNS projection",
+        "source_edges": edges_path.name,
+        "source_assignments": assignments_path.name,
+        "projection_report": report,
+    }
+    if "input_position" in assignments:
+        input_nodes = assignments[assignments["layer"] == 0].sort_values("body_id")
+        if input_nodes["input_position"].isna().any():
+            raise ValueError("layer-0 neurons must all have input_position when the column exists")
+        input_positions = input_nodes["input_position"].astype(float)
+        if not input_positions.between(-1.0, 1.0).all():
+            raise ValueError("input_position must be normalized to the [-1, 1] range")
+        metadata["input_positions"] = input_positions.tolist()
+
     connectome = LayeredConnectome(
         tuple(layers),
-        {
-            "kind": "MaleCNS projection",
-            "source_edges": edges_path.name,
-            "source_assignments": assignments_path.name,
-            "projection_report": report,
-        },
+        metadata,
     )
     connectome.validate()
     if report_path is not None:

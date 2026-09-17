@@ -16,6 +16,8 @@ MaleCNS의 실제 연결 토폴로지를 고정된 희소 마스크로 사용하
 | 흥분성·억제성 부호 제약 | 구현 | 알려진 presynaptic sign은 softplus 재매개변수화로 학습 중 고정 |
 | BP·PC·PC-ALM 비교 | 구현 | 같은 모델·목적함수에서 방법만 교체 가능 |
 | 차수 보존 재배선 대조군 | 구현 | 각 이분 레이어의 in/out degree를 유지하는 double-edge swap |
+| 시각–운동 3×3 벤치마크 | 구현 | 같은 과제에서 토폴로지 3종×학습법 3종 비교 |
+| BP gradient 정렬 지표 | 구현 | readout을 제외한 희소 투영의 gradient cosine 측정 |
 | 실제 MaleCNS 전체 166k 규모 학습 | 미검증 | 먼저 1k–5k visual-to-motor 부분 그래프에서 검증해야 함 |
 | 시간축/RL credit assignment | 미구현 | 현재 목적함수는 정적 지도학습·모방학습용 MSE |
 
@@ -65,7 +67,7 @@ settling이 끝난 뒤 \(h\)와 \(\lambda\)를 detach한다. 각 투영 \(\theta
 Python 3.10 이상과 [uv](https://docs.astral.sh/uv/)를 권장한다.
 
 ```bash
-git clone <PRIVATE_REPOSITORY_URL>
+git clone https://github.com/sjskoko/male-cns-pcalm.git
 cd male-cns-pcalm
 uv sync --extra dev
 uv run pytest
@@ -90,6 +92,18 @@ uv run flypcalm train \
 
 각 실행은 `summary.json`과 epoch별 `metrics.csv`를 만든다. 현재 synthetic task는 고정 teacher network가 만든 class를 학생 모델이 모방하는 검증용 문제다. 실제 시각 입력이나 행동 데이터라고 해석하면 안 된다.
 
+### 가상 시각–운동 벤치마크
+
+MaleCNS 파일이 없어도 추천 실험의 전체 실행 경로를 검증할 수 있다.
+
+```bash
+uv run flypcalm benchmark \
+  --config configs/benchmarks/virtual_visual_motor.yaml \
+  --output-dir results/virtual-visual-motor
+```
+
+이 명령은 고정된 4-class 시각–행동 과제에서 `native·degree_preserving·random` 토폴로지와 `BP·PC·PC-ALM`을 교차한 9개 조건을 실행한다. `report.md`, `aggregate.csv`, `trials.csv`, `metrics.csv`, `result.json`이 생성된다. 가상 모드는 synthetic retinotopic graph를 사용하므로 MaleCNS 결과로 해석하지 않는다. 정확한 프로토콜과 실제 데이터 전환법은 [`docs/VISUAL_MOTOR_EXPERIMENT.md`](docs/VISUAL_MOTOR_EXPERIMENT.md)에 있다.
+
 ## MaleCNS 데이터 준비
 
 공식 [MaleCNS 다운로드 페이지](https://male-cns.janelia.org/download/)에서 다음 파일을 받는다.
@@ -110,6 +124,7 @@ uv run flypcalm train \
 | `layer` | 0에서 시작하는 연속 정수; 감각 입력→중간 처리→하행/운동 순서 |
 | `module` | 사람이 읽을 수 있는 모듈 이름 |
 | `sign` | 선택 열; 흥분성 `+1`, 억제성 `-1`, 불명 `0` |
+| `input_position` | 선택 열; 입력층 뉴런의 좌우 시야 위치 `-1..+1` |
 
 작은 형식 예시는 `examples/neuron_layers.csv`에 있다. 실제 연구에서는 주석의 `class`, `type`, ROI와 neurotransmitter 표를 이용해 아래처럼 4–8개 레이어를 먼저 만드는 편이 안전하다.
 
@@ -179,7 +194,7 @@ wait
 
 이 코드는 아직 한 실험을 여러 GPU로 분산하지 않는다. RTX 4090 두 장이라면 우선 1k–5k 뉴런 부분 그래프, 4–8개 레이어, 3–5개 seed로 시작하고 메모리·settling 안정성을 확인한 뒤 10k 이상으로 확장하는 편이 현실적이다.
 
-권장 지표는 task accuracy/return, 표본 효율, 레이어별 residual과 dual norm, BP gradient와의 cosine similarity, wall-clock/memory, edge/뉴런 lesion 후 성능, sign 위반 수다. 현재 MVP는 loss·accuracy·residual·dual을 계산하며, gradient cosine 및 lesion sweep은 다음 구현 단계다.
+권장 지표는 task accuracy/return, 표본 효율, 레이어별 residual과 dual norm, BP gradient와의 cosine similarity, wall-clock/memory, edge/뉴런 lesion 후 성능, sign 위반 수다. 현재 벤치마크는 loss·accuracy·residual·dual·gradient cosine·실행 시간을 기록한다. lesion sweep은 다음 구현 단계다.
 
 ## 코드 구조
 
@@ -191,8 +206,13 @@ src/flypcalm/
   pcalm.py        PC/PC-ALM inference와 국소 parameter update
   synthetic.py    synthetic graph와 차수 보존 재배선
   experiment.py   재현 가능한 teacher-imitation 실험
-  cli.py          prepare/train/smoke 명령
-tests/            수식 퇴행·부호·전처리·재배선 테스트
+  benchmark.py    topology×learning-rule 실험 러너와 결과 집계
+  tasks/          토폴로지와 독립적인 시각–운동 과제
+  metrics/        BP 대비 local-gradient 정렬 지표
+  cli.py          prepare/train/smoke/benchmark 명령
+configs/benchmarks/ 가상 및 MaleCNS 3×3 실험 설정
+docs/             실험 프로토콜과 해석 기준
+tests/            수식·부호·전처리·재배선·벤치마크 테스트
 ```
 
 ## 알려진 한계

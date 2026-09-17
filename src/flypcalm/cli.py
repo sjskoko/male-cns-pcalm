@@ -6,6 +6,7 @@ from pathlib import Path
 
 import yaml
 
+from .benchmark import run_visual_motor_benchmark, write_benchmark_results
 from .data import build_layered_connectome
 from .experiment import run_experiment, write_results
 
@@ -49,6 +50,13 @@ def _smoke(args: argparse.Namespace) -> None:
     print(json.dumps(result, indent=2))
 
 
+def _benchmark(args: argparse.Namespace) -> None:
+    config = yaml.safe_load(Path(args.config).read_text(encoding="utf-8")) or {}
+    result = run_visual_motor_benchmark(config)
+    write_benchmark_results(result, args.output_dir)
+    print(json.dumps(result["aggregate"], indent=2))
+
+
 def parser() -> argparse.ArgumentParser:
     root = argparse.ArgumentParser(prog="flypcalm")
     subcommands = root.add_subparsers(dest="command", required=True)
@@ -71,6 +79,13 @@ def parser() -> argparse.ArgumentParser:
     smoke.add_argument("--device", default="cpu")
     smoke.add_argument("--seed", type=int, default=0)
     smoke.set_defaults(func=_smoke)
+
+    benchmark = subcommands.add_parser(
+        "benchmark", help="run topology x learning-rule visual-motor experiments"
+    )
+    benchmark.add_argument("--config", required=True)
+    benchmark.add_argument("--output-dir", default="results/visual-motor")
+    benchmark.set_defaults(func=_benchmark)
     return root
 
 

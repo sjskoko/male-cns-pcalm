@@ -1,0 +1,26 @@
+device: auto
+synthetic_graph: visual_proxy
+layer_sizes: [32, 64, 48, 24]
+density: 0.2
+receptive_width: 0.28
+graph_seed: 17
+
+topologies: [native, degree_preserving, random]
+methods: [bp, pc, pcalm]
+seeds: [0, 1, 2, 3, 4]
+
+train_samples: 512
+test_samples: 256
+noise_std: 0.04
+batch_size: 32
+epochs: 10
+activation: tanh
+trainable_edges: true
+learning_rate: 0.001
+
+budget: 10
+inner_steps: 1
+state_lr: 0.025
+rho: 1.0
+alpha: 0.25
+weight_credit_timing: pre_dual

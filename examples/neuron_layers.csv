@@ -1,7 +1,7 @@
-body_id,layer,module,sign
-101,0,visual_input,1
-102,0,visual_input,1
-201,1,visual_processing,1
-202,1,visual_processing,-1
-301,2,descending_control,1
-302,2,descending_control,0
+body_id,layer,module,sign,input_position
+101,0,visual_input,1,-1.0
+102,0,visual_input,1,1.0
+201,1,visual_processing,1,
+202,1,visual_processing,-1,
+301,2,descending_control,1,
+302,2,descending_control,0,
