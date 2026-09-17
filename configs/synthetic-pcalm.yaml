@@ -1,0 +1,18 @@
+seed: 0
+device: auto
+method: pcalm
+layer_sizes: [12, 24, 20, 16]
+density: 0.25
+output_dim: 3
+samples: 512
+batch_size: 32
+epochs: 10
+activation: tanh
+trainable_edges: true
+budget: 8
+inner_steps: 1
+state_lr: 0.05
+rho: 1.0
+alpha: 0.5
+weight_credit_timing: pre_dual
+learning_rate: 0.003

@@ -1,0 +1,17 @@
+seed: 0
+device: auto
+method: pcalm
+connectome: data/processed/malecns-visual-motor.pt
+output_dim: 4
+samples: 1024
+batch_size: 16
+epochs: 20
+activation: tanh
+trainable_edges: true
+budget: 10
+inner_steps: 1
+state_lr: 0.02
+rho: 1.0
+alpha: 0.25
+weight_credit_timing: pre_dual
+learning_rate: 0.001
