@@ -1,0 +1,19 @@
+{
+  "raw_sha256": {
+    "body-annotations-male-cns-v1.0-minconf-0.5.feather": "2177e246113e4cfbf1e7772ec37c6da1955ff22e8063d0b1f833101f99a9a3b2",
+    "body-neurotransmitters-male-cns-v1.0.feather": "95c9289220663abeb3409f3ad9e5a7f8a53f8093f5139d15502cd08da8879621",
+    "connectome-weights-male-cns-v1.0-minconf-0.5.feather": "e35da783d1c686b2b58b3b87cd6a403ae43bfcfba8bff28e08ef752c1a56afc1"
+  },
+  "assignment_sha256": "c44ab54504ae98c079ea1fa3ccfabdcd4cb022d55e1ed3aebc0c875d008776c4",
+  "neurons": 132,
+  "edges": 1001,
+  "all_selected_edges": 2663,
+  "discarded_nonadjacent_edges": 1662,
+  "layer_sizes": [
+    32,
+    40,
+    36,
+    24
+  ],
+  "unknown_sign_neurons": 22
+}
