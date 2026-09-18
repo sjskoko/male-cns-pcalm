@@ -1,7 +1,9 @@
 """Audit sample counts, pairing, frozen configuration and serialized aggregates."""
 import json
+
 import numpy as np
 import pandas as pd
+
 from study import HERE, METHODS, TASKS, digest, dump
 
 frozen=json.loads((HERE/'frozen.json').read_text())

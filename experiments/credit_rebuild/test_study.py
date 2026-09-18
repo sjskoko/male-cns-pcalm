@@ -1,5 +1,7 @@
 import numpy as np
-from study import bp, forward, local, signals, init
+
+from study import bp, forward, init, local, signals
+
 
 def fixture():
     rng=np.random.default_rng(8)
@@ -27,7 +29,7 @@ def test_scaled_activity_gradient_finite_difference():
     h=[h[0],h[1]+.1,h[2]-.2]
     s=[np.array([.75,1.,1.2,1.5]),np.array([1.,.8,1.3])]
     dual=[np.ones_like(h[1])*.1,np.ones_like(h[2])*.2]
-    p,r,q=signals(w,h,dual,s)
+    p,_r,q=signals(w,h,dual,s)
     analytical=[q[0]-(q[1]*(1-p[1]**2))@w[1].T,q[1]+(h[-1]@w[-1]-y)@w[-1].T]
     def energy():
         _,r,_=signals(w,h,dual,s)

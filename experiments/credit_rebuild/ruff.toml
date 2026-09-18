@@ -1,0 +1,6 @@
+extend = "../../pyproject.toml"
+
+[lint.per-file-ignores]
+# This exact source was SHA-256 frozen BEFORE test evaluation. Preserve its
+# byte identity; only import ordering is exempt, not correctness checks.
+"study.py" = ["I001"]

@@ -1,9 +1,11 @@
 """Execute the frozen secondary control; reuses audited local updates."""
 import json
+
 import numpy as np
 import pandas as pd
 from scipy.stats import wilcoxon
-from study import HERE, TASKS, circuit, fit, dump, digest
+
+from study import HERE, TASKS, circuit, digest, dump, fit
 
 assert json.loads((HERE/'frozen.json').read_text())['code_sha256']==digest(HERE/'study.py')
 masks,signs=circuit()
