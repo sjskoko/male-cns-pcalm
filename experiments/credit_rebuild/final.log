@@ -1,0 +1,58 @@
+completed nonlinear 1200
+completed nonlinear 1201
+completed nonlinear 1202
+completed nonlinear 1203
+completed nonlinear 1204
+completed nonlinear 1205
+completed nonlinear 1206
+completed nonlinear 1207
+completed nonlinear 1208
+completed nonlinear 1209
+completed nonlinear 1210
+completed nonlinear 1211
+completed nonlinear 1212
+completed nonlinear 1213
+completed nonlinear 1214
+completed nonlinear 1215
+completed nonlinear 1216
+completed nonlinear 1217
+completed nonlinear 1218
+completed nonlinear 1219
+completed linear 1200
+completed linear 1201
+completed linear 1202
+completed linear 1203
+completed linear 1204
+completed linear 1205
+completed linear 1206
+completed linear 1207
+completed linear 1208
+completed linear 1209
+completed linear 1210
+completed linear 1211
+completed linear 1212
+completed linear 1213
+completed linear 1214
+completed linear 1215
+completed linear 1216
+completed linear 1217
+completed linear 1218
+completed linear 1219
+     task  method      mse       sd       r2  initial_mse  seconds  noisy_mse
+   linear      bp 0.378105 0.026603 0.625356     1.319904 0.129108   0.404269
+   linear      pc 0.558684 0.052325 0.446139     1.319904 0.877991   0.584349
+   linear   pcalm 0.557552 0.043249 0.447570     1.319904 0.886335   0.580731
+   linear shuffle 0.560713 0.045991 0.444415     1.319904 0.895223   0.583833
+   linear      tp 0.557858 0.043000 0.447285     1.319904 0.899488   0.580884
+nonlinear      bp 0.005821 0.001919 0.980819     0.431831 0.131240   0.020558
+nonlinear      pc 0.010909 0.002912 0.963540     0.431831 0.864704   0.024888
+nonlinear   pcalm 0.017214 0.003399 0.942526     0.431831 0.864317   0.030764
+nonlinear shuffle 0.017289 0.003396 0.942238     0.431831 0.862310   0.030855
+nonlinear      tp 0.017229 0.003390 0.942450     0.431831 0.880627   0.030768
+     task    left right  delta_mse    ci_low   ci_high        p  wins  reduction_percent   holm_p
+nonlinear      pc pcalm  -0.006305 -0.007058 -0.005588 0.000002     0         -57.794464 0.000011
+nonlinear   pcalm    tp  -0.000015 -0.000130  0.000100 0.812355    10          -0.084349 1.000000
+nonlinear shuffle    tp   0.000060 -0.000081  0.000203 0.570597    11           0.346045 1.000000
+   linear      pc pcalm   0.001131 -0.009554  0.011175 0.674223    10           0.202510 1.000000
+   linear   pcalm    tp  -0.000306 -0.003229  0.002283 0.869488    12          -0.054838 1.000000
+   linear shuffle    tp   0.002856 -0.001845  0.007014 0.113987    14           0.509262 0.569935

@@ -1,5 +1,19 @@
 # MaleCNS × PC-ALM
 
+## 최신 실험: PC-ALM 학습 검증 재실행
+
+실제 MaleCNS 연결구조에서 **PC-ALM의 동작과 PC 대비 성능 개선**을 검증한
+[새 실험과 결과](experiments/credit_rebuild/README.md)를 추가했다.
+개발 400회 + 주 평가 200회 + 동일 학습률 대조 160회, 총 **760회**를 실행했다.
+이번 설정에서는 PC-ALM이 학습했지만 PC 대비 성능 개선은 확인되지 않았고,
+차수 보정형의 이점도 유의하지 않았다.
+
+[전체 결과](experiments/credit_rebuild/RESULTS.md) ·
+[동일 학습률 비교](experiments/credit_rebuild/MATCHED_RESULTS.md) ·
+[한국어 해석과 한계](experiments/credit_rebuild/DISCUSSION_KO.md)
+
+아래는 기존 토폴로지 효율성 실험의 설명이며, 최신 실험의 목적·결과와 구분한다.
+
 MaleCNS의 실제 연결 토폴로지를 고정된 희소 마스크로 사용하고, 각 모듈이 인접한 모듈의 제약 오차만으로 학습하도록 만든 연구용 프로토타입이다. 핵심 질문은 하나다.
 
 > 실제 초파리 connectome 토폴로지가 같은 크기의 무작위·차수 보존 재배선 그래프보다 국소 학습의 신호 전달, 표본 효율, 손상 강건성을 개선하는가?

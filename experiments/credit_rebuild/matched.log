@@ -1,0 +1,9 @@
+completed matched nonlinear 0.003
+completed matched nonlinear 0.006
+completed matched linear 0.003
+completed matched linear 0.006
+     task    lr   pc_mse  pcalm_mse     delta  reduction_percent    ci_low   ci_high  wins        p   holm_p
+nonlinear 0.003 0.015157   0.015601 -0.000444          -2.931379 -0.000598 -0.000306     1 0.000006 0.000017
+nonlinear 0.006 0.009781   0.010281 -0.000500          -5.108549 -0.000746 -0.000252     2 0.000322 0.000322
+   linear 0.003 0.538270   0.548731 -0.010461          -1.943432 -0.012729 -0.008227     0 0.000002 0.000008
+   linear 0.006 0.548743   0.568952 -0.020209          -3.682733 -0.026033 -0.014510     1 0.000036 0.000072

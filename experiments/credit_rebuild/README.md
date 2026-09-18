@@ -4,6 +4,21 @@
 학습 성능과 국소 기울기 전달을 검증한다. 분실된 과거 실험의 복원이 아닌
 독립 재구현·새 실행이다. 과거 24.1%/30.6% 개선 수치는 재사용하지 않는다.
 
+## 이번 실행의 결론
+
+개발 400회 + 주 평가 200회 + 동일 학습률 추가 평가 160회, 총 760회를 완료했다.
+PC-ALM은 학습하지만 이번 설정에서는 PC 대비 성능 개선을 확인하지 못했다.
+주 평가의 비선형 과제에서는 PC-ALM MSE가 PC보다 57.8% 높았고, 선형 과제는
+유의한 차이가 없었다. 학습률 차이를 제거한 별도 비교에서도 PC-ALM의 오차가
+1.9~5.1% 높았다. TP 차수 보정의 유의한 이점도 없었다.
+
+이 결과는 이 회로·과제·60에포크·8회 추론·설정 범위에 대한 결론이며,
+PC-ALM 일반의 실패나 삭제된 과거 실험의 정확한 재현 결과를 뜻하지 않는다.
+자세한 해석은 [DISCUSSION_KO.md](DISCUSSION_KO.md)를 참고한다.
+
+![주 실험 최종 MSE](paired_mse.png)
+![숨은 층 기울기 정렬](gradient_alignment.png)
+
 ## 재현
 
 저장소 루트에서 Python 3.11+를 사용한다. 기존 루트 PyTorch 패키지와 독립적이다.
@@ -17,6 +32,8 @@ python experiments/credit_rebuild/study.py prepare
 python -m pytest -q experiments/credit_rebuild/test_study.py
 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python experiments/credit_rebuild/study.py tune
 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python experiments/credit_rebuild/study.py run
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python experiments/credit_rebuild/matched_rates.py
+python experiments/credit_rebuild/verify_results.py
 python experiments/credit_rebuild/figures.py
 ```
 
@@ -35,6 +52,8 @@ python experiments/credit_rebuild/figures.py
 - `alignment.csv`: 초기 가중치에서 추론 횟수별 BP 기울기 정렬
 - `curves.csv`: 에포크별 검증 오차 (테스트 데이터로 모델 선택하지 않음)
 - `all_selected_edges.csv`, `manifest.json`: 실제 연결과 데이터 출처
+- [MATCHED_RESULTS.md](MATCHED_RESULTS.md): 새 시드에서 동일 학습률로 비교한 추가 실험
+- `verification.json`: 760회 실행 수, 고정 설정, 짝지은 초기화 및 유한한 지표 검증
 
 ## 해석 범위
 

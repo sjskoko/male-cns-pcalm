@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "development_fits": 400,
+  "primary_fits": 200,
+  "secondary_fits": 160,
+  "total_fits": 760,
+  "all_primary_and_secondary_metrics_finite": true,
+  "frozen_code_and_protocol_match": true,
+  "paired_initialization_match": true
+}
