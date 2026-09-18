@@ -1,0 +1,10 @@
+selected nonlinear bp (0.01, 0.1, 0.0) 0.005869942255225016
+selected nonlinear pc (0.006, 0.05, 0.0) 0.009355027322137782
+selected nonlinear pcalm (0.003, 0.05, 0.2) 0.01397729984292911
+selected nonlinear tp (0.003, 0.05, 0.2) 0.01405756778696501
+selected nonlinear shuffle (0.003, 0.05, 0.2) 0.014068967666003426
+selected linear bp (0.01, 0.1, 0.0) 0.3668802763085437
+selected linear pc (0.006, 0.05, 0.0) 0.5140861309673783
+selected linear pcalm (0.003, 0.05, 0.2) 0.533817224364451
+selected linear tp (0.003, 0.05, 0.2) 0.5364911796730898
+selected linear shuffle (0.003, 0.05, 0.2) 0.5371523216785626

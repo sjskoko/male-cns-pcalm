@@ -1,0 +1,16 @@
+name: credit-assignment-math
+on:
+  push:
+    paths: ['experiments/credit_rebuild/**', '.github/workflows/credit-rebuild.yml']
+  pull_request:
+    paths: ['experiments/credit_rebuild/**', '.github/workflows/credit-rebuild.yml']
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r experiments/credit_rebuild/requirements.txt
+      - run: python -m pytest -q experiments/credit_rebuild/test_study.py
