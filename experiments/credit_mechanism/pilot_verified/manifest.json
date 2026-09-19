@@ -1,0 +1,18 @@
+{
+  "profile": "pilot",
+  "seeds": [
+    2100,
+    2101
+  ],
+  "budgets": [
+    8
+  ],
+  "epochs": 10,
+  "python": "3.12.14",
+  "numpy": "2.3.5",
+  "code_sha256": "7f1f211e1d1acb0803698f04ac71f139d8ffac3d28af0b4787bd1e8af3f6539e",
+  "base_sha256": "7453ef3ac061541509595c481f92aecca733838d8e43c84712a9796866ed3deb",
+  "circuit_sha256": "0a780679754b101e39e20a24de41d41e7f8b77ead9d776f414d9eeb8859e5f38",
+  "protocol_sha256": "30d1fc8020d33dd2f9dab2615497b2d965a06dc7c68a16f78a9bf55ea64765b0",
+  "interpretation": "Exploratory fixed-hyperparameter study, not confirmatory."
+}
