@@ -1,0 +1,25 @@
+{
+  "hashes": {
+    "experiments/temporal_connectome/experiment.py": "d248e80aa68834660df02e7b66a9aba167bc98f5af84a509a670fa42ed40177b",
+    "experiments/temporal_connectome/PROTOCOL.md": "95c52740c2ba586b475517051cebbce987a8aa3dda5ea4a9b40021924d2446dd",
+    "experiments/credit_rebuild/all_selected_edges.csv": "1c92179cda2bb0253b9a5fec41a1a1c7d1dfef38f6205192c7d1aff4bd212e37",
+    "experiments/malecns_v1_real/assignments.csv": "c44ab54504ae98c079ea1fa3ccfabdcd4cb022d55e1ed3aebc0c875d008776c4"
+  },
+  "sklearn": "1.8.0",
+  "numpy": "2.3.5",
+  "image_sha256": "20def7f70a702f0af9732fbba4375e147a7d54fe70d8c45569b8e7c1c7010c10",
+  "seeds": [
+    3100,
+    3101,
+    3102,
+    3103,
+    3104,
+    3105,
+    3106,
+    3107,
+    3108,
+    3109
+  ],
+  "epochs": 20,
+  "input": "Real digit images, synthetic periodic translation; not natural video"
+}
