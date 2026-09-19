@@ -1,0 +1,16 @@
+{
+  "python": "3.12.14",
+  "numpy": "2.3.5",
+  "neurons": 132,
+  "edges": 2663,
+  "missing_reverse_edges": 1515,
+  "raw_sha256": "e35da783d1c686b2b58b3b87cd6a403ae43bfcfba8bff28e08ef752c1a56afc1",
+  "raw_selected_edges_verified": true,
+  "hashes": {
+    "experiments/feedback_audit/PROTOCOL.md": "a829bcf6726469d2a38aec51c8455673a5c6ef84e03517755616f34cb3a41e23",
+    "experiments/feedback_audit/run.py": "3c4c7fb1fb29ab03a09f8963ae1e791212a771caa583b381d3a2333b3257a6b2",
+    "experiments/credit_rebuild/all_selected_edges.csv": "1c92179cda2bb0253b9a5fec41a1a1c7d1dfef38f6205192c7d1aff4bd212e37",
+    "experiments/malecns_v1_real/assignments.csv": "c44ab54504ae98c079ea1fa3ccfabdcd4cb022d55e1ed3aebc0c875d008776c4"
+  },
+  "predictions_sha256": "e61aaf052a9eb736c0dc3cf61cefa91768c3b9fa036da542ad83773a9961b0d7"
+}

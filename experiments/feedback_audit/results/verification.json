@@ -1,0 +1,235 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "seed": 42000,
+      "gain": 0.4,
+      "finite_difference_error": 2.1934625011968855e-10
+    },
+    {
+      "seed": 42000,
+      "gain": 0.8,
+      "finite_difference_error": 4.663513141966031e-11
+    },
+    {
+      "seed": 42001,
+      "gain": 0.4,
+      "finite_difference_error": 8.454639750067727e-10
+    },
+    {
+      "seed": 42001,
+      "gain": 0.8,
+      "finite_difference_error": 2.0067024222415876e-09
+    },
+    {
+      "seed": 42002,
+      "gain": 0.4,
+      "finite_difference_error": 4.427420649559252e-09
+    },
+    {
+      "seed": 42002,
+      "gain": 0.8,
+      "finite_difference_error": 5.080978388412815e-11
+    },
+    {
+      "seed": 42003,
+      "gain": 0.4,
+      "finite_difference_error": 4.848173889277819e-10
+    },
+    {
+      "seed": 42003,
+      "gain": 0.8,
+      "finite_difference_error": 2.82640036771709e-10
+    },
+    {
+      "seed": 42004,
+      "gain": 0.4,
+      "finite_difference_error": 4.837122130346726e-11
+    },
+    {
+      "seed": 42004,
+      "gain": 0.8,
+      "finite_difference_error": 8.69005398376017e-11
+    },
+    {
+      "seed": 42000,
+      "gain": 0.4,
+      "method": "pc",
+      "max_recurrence_error": 6.074435038017566e-16
+    },
+    {
+      "seed": 42000,
+      "gain": 0.4,
+      "method": "alm_exact",
+      "max_recurrence_error": 4.3255701407781965e-16
+    },
+    {
+      "seed": 42000,
+      "gain": 0.4,
+      "method": "alm_masked",
+      "max_recurrence_error": 4.443589873746515e-16
+    },
+    {
+      "seed": 42000,
+      "gain": 0.8,
+      "method": "pc",
+      "max_recurrence_error": 7.516136626264523e-16
+    },
+    {
+      "seed": 42000,
+      "gain": 0.8,
+      "method": "alm_exact",
+      "max_recurrence_error": 4.920998475393185e-16
+    },
+    {
+      "seed": 42000,
+      "gain": 0.8,
+      "method": "alm_masked",
+      "max_recurrence_error": 4.990607497322068e-16
+    },
+    {
+      "seed": 42001,
+      "gain": 0.4,
+      "method": "pc",
+      "max_recurrence_error": 5.130593938500174e-16
+    },
+    {
+      "seed": 42001,
+      "gain": 0.4,
+      "method": "alm_exact",
+      "max_recurrence_error": 4.195493096708927e-16
+    },
+    {
+      "seed": 42001,
+      "gain": 0.4,
+      "method": "alm_masked",
+      "max_recurrence_error": 4.233878896508316e-16
+    },
+    {
+      "seed": 42001,
+      "gain": 0.8,
+      "method": "pc",
+      "max_recurrence_error": 5.881221646633104e-16
+    },
+    {
+      "seed": 42001,
+      "gain": 0.8,
+      "method": "alm_exact",
+      "max_recurrence_error": 4.3849796982899517e-16
+    },
+    {
+      "seed": 42001,
+      "gain": 0.8,
+      "method": "alm_masked",
+      "max_recurrence_error": 3.9013986910253986e-16
+    },
+    {
+      "seed": 42002,
+      "gain": 0.4,
+      "method": "pc",
+      "max_recurrence_error": 5.92678126021334e-16
+    },
+    {
+      "seed": 42002,
+      "gain": 0.4,
+      "method": "alm_exact",
+      "max_recurrence_error": 5.984517822963622e-16
+    },
+    {
+      "seed": 42002,
+      "gain": 0.4,
+      "method": "alm_masked",
+      "max_recurrence_error": 5.630864951019711e-16
+    },
+    {
+      "seed": 42002,
+      "gain": 0.8,
+      "method": "pc",
+      "max_recurrence_error": 8.426639037490188e-16
+    },
+    {
+      "seed": 42002,
+      "gain": 0.8,
+      "method": "alm_exact",
+      "max_recurrence_error": 4.704632816030381e-16
+    },
+    {
+      "seed": 42002,
+      "gain": 0.8,
+      "method": "alm_masked",
+      "max_recurrence_error": 4.580374339026549e-16
+    },
+    {
+      "seed": 42003,
+      "gain": 0.4,
+      "method": "pc",
+      "max_recurrence_error": 5.143255451831769e-16
+    },
+    {
+      "seed": 42003,
+      "gain": 0.4,
+      "method": "alm_exact",
+      "max_recurrence_error": 3.788635436447666e-16
+    },
+    {
+      "seed": 42003,
+      "gain": 0.4,
+      "method": "alm_masked",
+      "max_recurrence_error": 3.7711471891127474e-16
+    },
+    {
+      "seed": 42003,
+      "gain": 0.8,
+      "method": "pc",
+      "max_recurrence_error": 6.007865413860117e-16
+    },
+    {
+      "seed": 42003,
+      "gain": 0.8,
+      "method": "alm_exact",
+      "max_recurrence_error": 4.064994792768151e-16
+    },
+    {
+      "seed": 42003,
+      "gain": 0.8,
+      "method": "alm_masked",
+      "max_recurrence_error": 4.3325183731643656e-16
+    },
+    {
+      "seed": 42004,
+      "gain": 0.4,
+      "method": "pc",
+      "max_recurrence_error": 5.688809577962073e-16
+    },
+    {
+      "seed": 42004,
+      "gain": 0.4,
+      "method": "alm_exact",
+      "max_recurrence_error": 5.70493614935276e-16
+    },
+    {
+      "seed": 42004,
+      "gain": 0.4,
+      "method": "alm_masked",
+      "max_recurrence_error": 4.199898614595861e-16
+    },
+    {
+      "seed": 42004,
+      "gain": 0.8,
+      "method": "pc",
+      "max_recurrence_error": 6.239135068734714e-16
+    },
+    {
+      "seed": 42004,
+      "gain": 0.8,
+      "method": "alm_exact",
+      "max_recurrence_error": 6.581294462809031e-16
+    },
+    {
+      "seed": 42004,
+      "gain": 0.8,
+      "method": "alm_masked",
+      "max_recurrence_error": 4.552012988783303e-16
+    }
+  ]
+}
