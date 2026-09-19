@@ -1,0 +1,14 @@
+{
+  "phase": "development",
+  "seed": 46002,
+  "method": "readout",
+  "lr": 0.003,
+  "initial_validation_loss": 0.5780311055110593,
+  "validation_loss": 0.2603369464762267,
+  "validation_accuracy": 0.8333333333333334,
+  "w_change": 0.0,
+  "gradient_error": 0.0,
+  "gradient_cosine": 0.9999999999999998,
+  "seconds": 0.32791657699272037,
+  "status": "ok"
+}

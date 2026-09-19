@@ -1,0 +1,14 @@
+{
+  "python": "3.12.14",
+  "numpy": "2.3.5",
+  "pandas": "2.2.3",
+  "sklearn": "1.8.0",
+  "raw_sha256": "e35da783d1c686b2b58b3b87cd6a403ae43bfcfba8bff28e08ef752c1a56afc1",
+  "dataset_sha256": "f6d9e39f37dc45d327f6db33428ee58970ccceabb2535a5c179de35886b70443",
+  "hashes": {
+    "experiments/feedback_learning/study.py": "b145f0fadbae0826d02d1c686a60af672ee8963913f39f1fa3ba1765752e3216",
+    "experiments/feedback_learning/PROTOCOL.md": "83857df432e5a45da53de460b97a01da243cc100d4e422e4478e17eafab52649",
+    "experiments/credit_rebuild/all_selected_edges.csv": "1c92179cda2bb0253b9a5fec41a1a1c7d1dfef38f6205192c7d1aff4bd212e37",
+    "experiments/feedback_learning/results/split.json": "dc069cf89dcd40757146b511fe38e0602d3cc3b4cf2305b425c6d44659a2330b"
+  }
+}

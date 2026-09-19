@@ -1,0 +1,16 @@
+{
+  "phase": "evaluation",
+  "seed": 47003,
+  "method": "masked",
+  "lr": 0.003,
+  "initial_validation_loss": 0.5723607658142744,
+  "validation_loss": 0.22609105205823718,
+  "validation_accuracy": 0.89,
+  "w_change": 1.6302833196286595,
+  "gradient_error": 0.1600737067479656,
+  "gradient_cosine": 0.9883088456869912,
+  "seconds": 1.9784870860021329,
+  "status": "ok",
+  "test_loss": 0.22917301375351415,
+  "test_accuracy": 0.8927973199329984
+}

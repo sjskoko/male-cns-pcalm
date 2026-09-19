@@ -1,0 +1,7 @@
+{
+  "implicit_learnability": true,
+  "alm_learnability": true,
+  "alm_over_readout": true,
+  "novel_method_demonstrated": false,
+  "biological_task_validated": false
+}

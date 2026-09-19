@@ -1,0 +1,8 @@
+{
+  "frozen_hashes_match": true,
+  "development_fits": 30,
+  "evaluation_fits": 25,
+  "upstream_fits": 3,
+  "official_reproduction_gate": true,
+  "all_per_run_records_match": true
+}

@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "finite_difference_errors": [
+    6.564607485760694e-10,
+    2.0052677918570598e-11
+  ],
+  "alpha_zero_matches_pc": true,
+  "projection_invariants": true,
+  "disjoint_splits": true
+}

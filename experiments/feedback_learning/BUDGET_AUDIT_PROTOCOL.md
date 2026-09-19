@@ -1,0 +1,6 @@
+# Post-pilot development-only budget audit
+
+Registered locally after the 55-fit pilot, before this audit. Motivation: finite-T ALM gradient error remained about12% at T32, so stronger claims need a convergence diagnostic at trained weights. This audit cannot retroactively change the original experiment or its selected hyperparameters.
+
+Replay the selected ALM development fits (seeds46000..46002, selected LR) exactly, capturing their final W,C,B without modifying study.py. Check reproduced validation loss against the original per-run record to1e-12. Do not access test outcomes in the audit.
+At the fixed first32 training samples, compare PC, ALM, masked surrogate for T in {8,32,128,512}, with the original eta=.1, alpha=.2 and exact implicit gradient reference. Report W gradient relative error/cosine and constraint residual. Compute joint linear iteration spectral radius for each trained model; PC uses its activity matrix. Hypothesis conditional on stability: exact ALM error tends toward zero with more inference, while masked surrogate retains biased credit and PC has finite-penalty bias. These are prior-theory checks, NOT algorithm novelty or performance improvement. Costs and task accuracy are not compared in this probe. Save audit source/protocol hashes before replay. No test-set changes, no confirmation runs.

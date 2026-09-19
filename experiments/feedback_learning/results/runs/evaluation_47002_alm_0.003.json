@@ -1,0 +1,16 @@
+{
+  "phase": "evaluation",
+  "seed": 47002,
+  "method": "alm",
+  "lr": 0.003,
+  "initial_validation_loss": 0.5594757441788215,
+  "validation_loss": 0.2280088167746211,
+  "validation_accuracy": 0.86,
+  "w_change": 1.979528175446382,
+  "gradient_error": 0.1295681467806038,
+  "gradient_cosine": 0.9955583857993637,
+  "seconds": 2.233927001012489,
+  "status": "ok",
+  "test_loss": 0.22992723785707378,
+  "test_accuracy": 0.8592964824120602
+}
