@@ -6,6 +6,16 @@ A reproducible research sandbox for predictive coding and augmented-Lagrangian l
 
 [한국어 / original implementation guide](README.ko.md) · [Results](experiments/credit_rebuild/RESULTS.md) · [Matched-rate control](experiments/credit_rebuild/MATCHED_RESULTS.md) · [Contribute](CONTRIBUTING.md)
 
+## Run a small live example
+
+[**Open the CPU notebook in Colab**](https://colab.research.google.com/github/sjskoko/male-cns-pcalm/blob/main/examples/quickstart.ipynb) and choose Runtime → Run all.
+
+It trains BP, PC and PC-ALM for 20 epochs on one paired seed. No GPU or raw-data download is needed. This is a demonstration, not the 760-fit benchmark. The notebook downloads public repository code and installs its dependencies.
+
+![Measured demo learning curves](docs/launch/launch.png)
+
+[45-second explanatory video](docs/launch/demo.mp4) · [Demo source](examples/launch_demo.py) · [Join the reproduction effort](https://github.com/sjskoko/male-cns-pcalm/issues)
+
 ## What we found
 
 PC-ALM learns on this graph, but **did not outperform standard predictive coding in the tested settings**. Better initial gradient alignment did not translate into lower final test error.
